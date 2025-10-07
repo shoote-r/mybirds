@@ -32,13 +32,13 @@
 - Constraint : *notnull*, *PositiveOrZero*
 - SideNote 
 
-
 **[objet]birds** 
 - Properties : *description*, *name*
 - Type : *String*, *String*
 - Constraint : none, *notnull*
 - SideNote : 
 
+NOTE : could be more developed esp. birds
 
 #### Developer 
 
