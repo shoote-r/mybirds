@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}The birds in my garden {{ garden.name }} {% endblock %}
+
+{% block body %}
+	<h1>My birds</h1>
+	<ul>
+	{% for Birds in birds %}
+		<li>{{ Birds.name }}</li>
+	{% endfor %}
+	<!--   Must deal with exception in case there are no birds in the garden -->
+	
+{% endblock %}
+
+		

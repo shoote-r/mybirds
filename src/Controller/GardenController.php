@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 #[Route('/garden')]
 final class GardenController extends AbstractController
@@ -24,6 +25,8 @@ final class GardenController extends AbstractController
         ]);
     }
 
+   
+# Create Garden
     #[Route('/new', name: 'app_garden_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -43,7 +46,8 @@ final class GardenController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    
+# Show Garden/id
     #[Route('/{id}', name: 'app_garden_show', methods: ['GET'])]
     public function show(Garden $garden): Response
     {
@@ -51,7 +55,9 @@ final class GardenController extends AbstractController
             'garden' => $garden,
         ]);
     }
-
+    
+    
+# Edit Garden
     #[Route('/{id}/edit', name: 'app_garden_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Garden $garden, EntityManagerInterface $entityManager): Response
     {
@@ -70,6 +76,7 @@ final class GardenController extends AbstractController
         ]);
     }
 
+# Delete Garden
     #[Route('/{id}', name: 'app_garden_delete', methods: ['POST'])]
     public function delete(Request $request, Garden $garden, EntityManagerInterface $entityManager): Response
     {
@@ -79,5 +86,18 @@ final class GardenController extends AbstractController
         }
 
         return $this->redirectToRoute('app_garden_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+# List bird inside a Garden 
+    #[Route('/{id}/birds', name: 'app_garden_birds', methods: ['GET'])]
+    public function show_birds(Garden $garden): Response 
+    {
+        $birds = $garden->getBirds();
+        
+        return $this->render('garden/show_birds.twig', [
+            'garden' => $garden,
+            'birds' => $birds]);
     }
 }
