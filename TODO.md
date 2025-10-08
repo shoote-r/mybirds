@@ -22,7 +22,14 @@ Defined .env file by APP_ENV points to overriding .env file, could be prod or te
 - **symfony console doctrine:database:drop** 
 - **symfony console doctrine:database:create**
 - **symfony console doctrine:schema:create** 	
+- **symfony console doctrine:schema:create --dump-sql** | *show SQL code used for database creation* 
+
 
 
 *setup databse connection in .env doctrine/doctrine-bundle* 
+
+# TO ADD
+
+### Birds and Garden
+Gardens do not show the birds they contain and birds do not show to which garden they belong, though we're supposed to only have one garden so there is something to fix.
 

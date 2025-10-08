@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Birds index{% endblock %}
+
+{% block body %}
+    <h1>Birds index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for bird in birds %}
+            <tr>
+                <td>{{ bird.id }}</td>
+                <td>{{ bird.name }}</td>
+                <td>{{ bird.description }}</td>
+                <td>
+                    <a href="{{ path('app_birds_show', {'id': bird.id}) }}">show</a>
+                    <a href="{{ path('app_birds_edit', {'id': bird.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_birds_new') }}">Create new</a>
+{% endblock %}
