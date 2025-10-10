@@ -23,6 +23,10 @@
                 <th>Name</th>
                 <td>{{ garden.name }}</td>
             </tr>
+            <tr>
+            	<th>Content</th>
+            	<td><a href="{{ path('app_garden_birds', {id : garden.id})}}">All birds</a></td>
+            </tr>
         </tbody>
     </table>
 

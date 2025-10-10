@@ -33,3 +33,10 @@ Defined .env file by APP_ENV points to overriding .env file, could be prod or te
 ### Birds and Garden
 Gardens do not show the birds they contain and birds do not show to which garden they belong, though we're supposed to only have one garden so there is something to fix.
 
+### TODO 10/10/2025
+- Complete readme 
+- Add links to each objects when displaying inventory content 
+- Proper homepage 
+- Proper Garden and Birds pages 
+
+- Check all is good before sending it 
