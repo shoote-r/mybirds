@@ -30,6 +30,10 @@ class Garden
     #[ORM\OneToMany(targetEntity: Birds::class, mappedBy: 'garden', orphanRemoval: true)]
     private Collection $birds;
 
+    #[ORM\OneToOne(inversedBy: 'garden', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]  //I set it to true since I don't have the time to fix it as of now
+    private ?Member $member = null;
+
     public function __construct()
     {
         $this->birds = new ArrayCollection();
@@ -102,6 +106,18 @@ class Garden
                 $bird->setGarden(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMember(): ?Member
+    {
+        return $this->member;
+    }
+
+    public function setMember(Member $member): static
+    {
+        $this->member = $member;
 
         return $this;
     }

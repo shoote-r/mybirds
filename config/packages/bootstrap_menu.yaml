@@ -1,0 +1,8 @@
+bootstrap_menu:
+  menus:
+    main:
+      items:
+        garden:
+          label: 'Your Gardens'
+          route: 'app_garden_index'
+        
