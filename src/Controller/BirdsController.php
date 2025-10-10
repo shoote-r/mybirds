@@ -14,14 +14,17 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/birds')]
 final class BirdsController extends AbstractController
 {
-    #[Route(name: 'app_birds_index', methods: ['GET'])]
+    
+    //Birds are meant to remain private
+/*    #[Route(name: 'app_birds_index', methods: ['GET'])]
     public function index(BirdsRepository $birdsRepository): Response
     {
         return $this->render('birds/index.html.twig', [
             'birds' => $birdsRepository->findAll(),
         ]);
     }
-
+*/
+    
     #[Route('/new', name: 'app_birds_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -33,7 +36,7 @@ final class BirdsController extends AbstractController
             $entityManager->persist($bird);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_birds_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_garden_birds', [], Response::HTTP_SEE_OTHER);  //Redirect should be changed for new, edit, delete
         }
 
         return $this->render('birds/new.html.twig', [

@@ -6,9 +6,11 @@
 	<h1>My birds in my {{ garden.name }}</h1>
 	<ul>
 	{% for bird in birds %}
-		<li>{{ bird.name }}</li>
-		<li><a href="{{ path('app_birds_show', {'id': bird.id}) }}">show</a></li>
+		<li>{{ bird.name }} -> <a href="{{ path('app_birds_show', {'id': bird.id}) }}">show</a></li>
 	{% endfor %}
+	<a href="{{ path('app_birds_new') }}">Add a bird</a>
+	<BR>
+	<a href="{{ path('app_garden_show', {'id' : garden.id}) }}">Go back to garden</a>
 	<!--   Must deal with exception in case there are no birds in the garden -->
 	
 {% endblock %}
