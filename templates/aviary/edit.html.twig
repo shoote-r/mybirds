@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Aviary{% endblock %}
+
+{% block body %}
+    <h1>Edit Aviary</h1>
+
+    {{ include('aviary/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_aviary_index') }}">back to list</a>
+
+    {{ include('aviary/_delete_form.html.twig') }}
+{% endblock %}

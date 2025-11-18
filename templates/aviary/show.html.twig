@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Aviary{% endblock %}
+
+{% block body %}
+    <h1>Aviary</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ aviary.id }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ aviary.description }}</td>
+            </tr>
+            <tr>
+                <th>Published</th>
+                <td>{{ aviary.published ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_aviary_index') }}">back to list</a>
+
+    <a href="{{ path('app_aviary_edit', {'id': aviary.id}) }}">edit</a>
+
+    {{ include('aviary/_delete_form.html.twig') }}
+{% endblock %}
+
+
+		

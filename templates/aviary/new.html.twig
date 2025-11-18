@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Aviary{% endblock %}
+
+{% block body %}
+    <h1>Create new Aviary</h1>
+
+    {{ include('aviary/_form.html.twig') }}
+
+    <a href="{{ path('app_aviary_index') }}">back to list</a>
+{% endblock %}

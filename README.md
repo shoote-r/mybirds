@@ -63,7 +63,11 @@ Birds are lowkey cool so I thought they deserved more recognition yk
 - go see realization guide
  
 
-
+# Current issues 
+- The src/DataFixtures/AppFixtures.php file works but is a bit of a mess due to each bird needing to be in a garden.
+- Eclipse markdown interpretor is horrendous so the README.txt is a bit rough
+- Not a lot of edge cases are taken into account and there was no testing done 
+- I haven't added the [galerie]aviary entity yet.
 
 
 
