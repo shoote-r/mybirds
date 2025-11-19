@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}The birds in my aviary {% endblock %}
+
+{% block body %}
+	<h1>My birds in my aviary</h1>
+	<ul>
+	{% for bird in birds %}
+		<li>{{ bird.name }} -> <a href="{{ path('app_birds_show', {'id': bird.id}) }}">show</a></li>
+	{% endfor %}
+	<a href="{{ path('app_birds_new') }}">Add a bird</a>
+	<BR>
+	<a href="{{ path('app_aviary_show', {'id' : aviary.id}) }}">Go back to aviary</a>
+	<!--   Must deal with exception in case there are no birds in the garden -->
+	
+{% endblock %}
+
+		

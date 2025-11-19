@@ -19,6 +19,10 @@
                 <th>Published</th>
                 <td>{{ aviary.published ? 'Yes' : 'No' }}</td>
             </tr>
+            <tr>
+            	<th>Content</th>
+            	<td><a href="{{ path('app_aviary_birds', {id : aviary.id})}}">All birds</a></td>
+            </tr>
         </tbody>
     </table>
 

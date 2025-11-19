@@ -40,3 +40,7 @@ Gardens do not show the birds they contain and birds do not show to which garden
 - Proper Garden and Birds pages 
 
 - Check all is good before sending it 
+
+## Aviary 
+Haven't added all relations yet : aviary <-> member and aviary<->birds
+

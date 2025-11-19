@@ -78,4 +78,15 @@ final class AviaryController extends AbstractController
 
         return $this->redirectToRoute('app_aviary_index', [], Response::HTTP_SEE_OTHER);
     }
+    
+    # List bird inside an Aviary
+    #[Route('/{id}/birds', name: 'app_aviary_birds', methods: ['GET'])]
+    public function show_birds(Aviary $aviary): Response
+    {
+        $birds = $aviary->getBirds();
+        
+        return $this->render('aviary/show_birds.twig', [
+            'aviary' => $aviary,
+            'birds' => $birds]);
+    }
 }
