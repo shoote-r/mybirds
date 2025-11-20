@@ -19,10 +19,20 @@
                 <th>Published</th>
                 <td>{{ aviary.published ? 'Yes' : 'No' }}</td>
             </tr>
+            <!--  
             <tr>
             	<th>Content</th>
             	<td><a href="{{ path('app_aviary_birds', {id : aviary.id})}}">All birds</a></td>
             </tr>
+            -->
+             <h2>Birds in this aviary:</h2>
++    <ul>
++        {% for bird in aviary.birds %}
++            <li><a href="{{ path('app_aviary_birds_show', {'aviary_id': aviary.id, 'birds_id': bird.id}) }}">{{ bird.name }}</a></li>
++        {% else %}
++            <li>No birds in this aviary.</li>
++        {% endfor %}
++    </ul>
         </tbody>
     </table>
 

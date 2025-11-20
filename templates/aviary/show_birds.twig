@@ -6,13 +6,12 @@
 	<h1>My birds in my aviary</h1>
 	<ul>
 	{% for bird in birds %}
-		<li>{{ bird.name }} -> <a href="{{ path('app_birds_show', {'id': bird.id}) }}">show</a></li>
+		<li>{{ bird.name }} -> <a href="{{ path('app_aviary_birds_show', {'aviary_id': aviary.id, 'birds_id': bird.id}) }}">show</a></li>
 	{% endfor %}
-	<a href="{{ path('app_birds_new') }}">Add a bird</a>
+	<!--  <a href="{{ path('app_birds_new') }}">Add a bird</a> Caused an issue as it was then trying to link it to a garden-->
 	<BR>
 	<a href="{{ path('app_aviary_show', {'id' : aviary.id}) }}">Go back to aviary</a>
 	<!--   Must deal with exception in case there are no birds in the garden -->
 	
 {% endblock %}
 
-		

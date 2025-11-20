@@ -44,3 +44,4 @@ Gardens do not show the birds they contain and birds do not show to which garden
 ## Aviary 
 Haven't added all relations yet : aviary <-> member and aviary<->birds
 
+Need to implement the exceptions listed in 12.4, I don't understand their implementation.

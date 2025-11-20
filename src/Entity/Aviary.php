@@ -18,7 +18,7 @@ class Aviary
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $published = null;
 
     #[ORM\ManyToOne(inversedBy: 'aviaries')]
