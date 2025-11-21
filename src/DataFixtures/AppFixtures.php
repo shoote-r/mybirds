@@ -12,7 +12,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
-    
     private UserPasswordHasherInterface $hasher;
     
     public function __construct(UserPasswordHasherInterface $hasher)
@@ -23,7 +22,7 @@ class AppFixtures extends Fixture
     /**
      * Generates initialization data for members :
      *  [email, plain text password]
-     * @return \\Generator
+     * @return \Generator
      */
     private function membersGenerator()
     {
@@ -40,7 +39,6 @@ class AppFixtures extends Fixture
             $garden->setSize($size);
             $garden->setName($name);
             
-            // link GArden to the correct Member
             /** @var Member $member */
             $member = $this->getReference($memberRef, Member::class);
             $garden->setMember($member);
@@ -48,7 +46,6 @@ class AppFixtures extends Fixture
             
             $manager->persist($garden);
             
-            // Reference to link Birds
             $this->addReference('garden_' . $index, $garden);
             $index++;
         }
@@ -56,15 +53,11 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
     
-    
     private function getGardens()
     {
-        // description, size, name, memberRef
         yield ['This is nice', 12, 'My first Garden', 'member_1'];
         yield [null, 43, 'My second Garden', 'member_2'];
     }
-    
-    
     
     private function loadBirds(ObjectManager $manager)
     {
@@ -79,7 +72,6 @@ class AppFixtures extends Fixture
             $bird->setGarden($garden);
             $manager->persist($bird);
             
-            // Reference to later add then to an aviary
             $this->addReference('bird_' . $index, $bird);
             $index++;
         }
@@ -87,17 +79,14 @@ class AppFixtures extends Fixture
         $manager->flush();
     }
     
-    
     private function getBirds()
     {
         yield['First Bird', 'Will ask you how was your day :)', 'garden_1'];
         yield['Second Bird', 'This bird is a hater frfr', 'garden_2'];
-        
     }
     
     private function getAviaries()
     {
-        // description, published, memberRef, birdsRefs[]
         yield ['Olivier public aviary', true, 'member_1', ['bird_1']];
         yield ['Slash public aviary',   true, 'member_2', ['bird_2']];
     }
@@ -114,7 +103,6 @@ class AppFixtures extends Fixture
             $aviary->setMember($member);
             $member->addAviary($aviary);
             
-            // Link existing birds to an Aviary (ManyToMany)
             foreach ($birdsRefs as $birdRef) {
                 /** @var Birds $bird */
                 $bird = $this->getReference($birdRef, Birds::class);
@@ -128,26 +116,33 @@ class AppFixtures extends Fixture
     }
     
     
-    
     public function load(ObjectManager $manager): void
     {
         $index = 1;
+
+        // Users
         foreach ($this->membersGenerator() as [$email, $plainPassword]) {
             $user = new Member();
             $password = $this->hasher->hashPassword($user, $plainPassword);
             $user->setEmail($email);
             $user->setPassword($password);
-            
-            // $roles = array();
-            // $roles[] = $role;
-            // $user->setRoles($roles);
-            
+            $user->setRoles(['ROLE_USER']);
+
             $manager->persist($user);
-            
-            // Reference for later use
             $this->addReference('member_' . $index, $user);
             $index++;
         }
+
+        // admin 
+        $admin = new Member();
+        $admin->setEmail('admin@localhost');
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin123'));
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $manager->persist($admin);
+
+        
+        
         
         $this->loadGardens($manager);
         $this->loadBirds($manager);
@@ -155,5 +150,4 @@ class AppFixtures extends Fixture
         
         $manager->flush();
     }
-    
 }

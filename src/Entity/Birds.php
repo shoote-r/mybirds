@@ -6,6 +6,7 @@ use App\Repository\BirdsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 
 #[ORM\Entity(repositoryClass: BirdsRepository::class)]
 class Birds
@@ -30,6 +31,11 @@ class Birds
      */
     #[ORM\ManyToMany(targetEntity: Aviary::class, mappedBy: 'birds')]
     private Collection $aviaries;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imageFIlename = null;
+    
+    private ?File $imageFile = null;
 
     public function __construct()
     {
@@ -85,22 +91,57 @@ class Birds
         return $this->aviaries;
     }
 
+    
     public function addAviary(Aviary $aviary): static
     {
         if (!$this->aviaries->contains($aviary)) {
             $this->aviaries->add($aviary);
-            $aviary->addBird($this);
+            if (!$aviary->getBirds()->contains($this)) {
+                $aviary->addBird($this);
+            }
         }
-
         return $this;
     }
-
+    
     public function removeAviary(Aviary $aviary): static
     {
         if ($this->aviaries->removeElement($aviary)) {
-            $aviary->removeBird($this);
+            if ($aviary->getBirds()->contains($this)) {
+                $aviary->removeBird($this);
+            }
         }
+        return $this;
+    }
+    
+   
+    public function __toString(): string
+    {
+        return $this->name ?? '';
+    }
+
+    public function getImageFIlename(): ?string
+    {
+        return $this->imageFIlename;
+    }
+
+    public function setImageFIlename(?string $imageFIlename): static
+    {
+        $this->imageFIlename = $imageFIlename;
 
         return $this;
     }
+    
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+    
+    
+    public function setImageFile(?File $imageFile): static
+    {
+        $this->imageFile = $imageFile;
+        return $this;
+    }
+    
+    
 }

@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use App\Entity\Garden;
 use App\Entity\Birds;
 use App\Form\BirdsType;
 use App\Repository\BirdsRepository;
@@ -15,35 +19,66 @@ use Symfony\Component\Routing\Attribute\Route;
 final class BirdsController extends AbstractController
 {
     
-    //Birds are meant to remain private
-/*    #[Route(name: 'app_birds_index', methods: ['GET'])]
+    #[Route('/', name: 'app_birds_index', methods: ['GET'])]
     public function index(BirdsRepository $birdsRepository): Response
     {
+        // ADMIN → peut tout voir
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $birds = $birdsRepository->findAll();
+        }
+        else {
+            $member = $this->getUser();
+            $birds = $birdsRepository->findMemberBirds($member);
+        }
+        
         return $this->render('birds/index.html.twig', [
-            'birds' => $birdsRepository->findAll(),
+            'birds' => $birds,
         ]);
     }
-*/
     
-    #[Route('/new', name: 'app_birds_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    
+    #[Route('/birds/new/{id}', name: 'app_birds_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, Garden $garden): Response
     {
         $bird = new Birds();
+        $bird->setGarden($garden);
+        
         $form = $this->createForm(BirdsType::class, $bird);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            // Gestion du fichier image uploadé
+            $imageFile = $form->get('imageFile')->getData();
+            
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('birds_images_directory'),
+                        $newFilename
+                        );
+                } catch (FileException $e) {
+                    // Optionnel : journaliser ou gérer l'erreur
+                }
+                
+                $bird->setImageFilename($newFilename);
+            }
+            
             $entityManager->persist($bird);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_garden_birds', [], Response::HTTP_SEE_OTHER);  //Redirect should be changed for new, edit, delete
+            
+            return $this->redirectToRoute('app_garden_show', [
+                'id' => $garden->getId(),
+            ], Response::HTTP_SEE_OTHER);
         }
-
+        
         return $this->render('birds/new.html.twig', [
             'bird' => $bird,
             'form' => $form,
         ]);
     }
+    
+    
 
     #[Route('/{id}', name: 'app_birds_show', methods: ['GET'])]
     public function show(Birds $bird): Response
@@ -58,27 +93,58 @@ final class BirdsController extends AbstractController
     {
         $form = $this->createForm(BirdsType::class, $bird);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+            
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                try {
+                    $imageFile->move(
+                        $this->getParameter('birds_images_directory'),
+                        $newFilename
+                        );
+                } catch (FileException $e) {
+                    // Gérer l'erreur si besoin
+                }
+                
+                $bird->setImageFilename($newFilename);
+            }
+            
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_birds_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('app_garden_show', [
+                'id' => $bird->getGarden()->getId(),
+            ]);
         }
-
+        
         return $this->render('birds/edit.html.twig', [
             'bird' => $bird,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_birds_delete', methods: ['POST'])]
     public function delete(Request $request, Birds $bird, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$bird->getId(), $request->getPayload()->getString('_token'))) {
+            
+            $imageFilename = $bird->getImageFilename();
+            if ($imageFilename) {
+                $imagePath = $this->getParameter('birds_images_directory') . '/' . $imageFilename;
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
+            }
+            
             $entityManager->remove($bird);
             $entityManager->flush();
         }
-
-        return $this->redirectToRoute('app_birds_index', [], Response::HTTP_SEE_OTHER);
+        
+        return $this->redirectToRoute('app_garden_show', [
+            'id' => $bird->getGarden()->getId(),
+        ]);
     }
+    
 }

@@ -19,6 +19,22 @@
                 <th>Description</th>
                 <td>{{ bird.description }}</td>
             </tr>
+            {% if bird.imageFilename %}
+                <tr>
+                    <th>Image</th>
+                    <td>
+                        <img src="{{ asset('uploads/birds/' ~ bird.imageFilename) }}"
+                             alt="Image de l'oiseau {{ bird.name }}"
+                             style="max-width: 300px; height: auto;">
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <th>Image</th>
+                    <td>Aucune image disponible</td>
+                </tr>
+            {% endif %}
+            
         </tbody>
     </table>
 

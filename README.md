@@ -8,16 +8,6 @@ This web app use is for each member to list the birds in their garden or their s
 Birds are lowkey cool so I thought they deserved more recognition yk
 
 
-# How to use 
-- Go on the homepage ("/").
-
-- From there you can check the navigation bar and click on "Your Gardens", this will display all the current Gardens in the web app. You can either edit or show a garden.
-
-- When showing a garden you see all its properties and you can display all the birds in that garden by clicking on "All birds".
-
-- When on a bird, you can either edit or delete it.
-
-
 # Entities
 ## Entity model 
 - [inventaire] = garden
@@ -62,12 +52,124 @@ Birds are lowkey cool so I thought they deserved more recognition yk
 **[membre]member**
 - go see realization guide
  
+# -----NAVIGATION GUIDE-----
 
-# Current issues 
-- The src/DataFixtures/AppFixtures.php file works but is a bit of a mess due to each bird needing to be in a garden.
-- Eclipse markdown interpretor is horrendous so the README.txt is a bit rough
-- Not a lot of edge cases are taken into account and there was no testing done 
-- I haven't added the [galerie]aviary entity yet.
+This guide explains how to navigate the application depending on the user role:  
+Administrator (ROLE_ADMIN) or User (ROLE_USER).
+
+---
+
+## 1. Administrator Navigation (ROLE_ADMIN)
+
+### Access
+- Go to `/`
+- Log in with an admin account (e.g. `admin@localhost`, pwd : `admin123`)
+
+Admins can access every feature and all data.
+
+### Gardens
+- Click **“Gardens”** in the navigation bar  
+- Admins see **all gardens**
+
+Actions available:
+- Show  
+- Edit  
+- View all birds inside the garden (“All birds”)
+
+### Birds
+Inside any garden:
+- Click **“All birds”**
+
+For each bird:
+- Show  
+- Edit  
+- Delete  
+
+### Aviaries
+- Go to **/aviary**
+- Admins see:
+  - All public aviaries
+  - All private aviaries
+  - All users’ aviaries
+
+Admins may edit or delete any aviary.
+
+### Add a Bird
+1. Open any garden  
+2. Click **“All birds”**  
+3. Click **“Add a Bird”**  
+4. Submit the form  
+
+The bird is linked to that garden.
+
+---
+
+## 2. User Navigation (ROLE_USER)
+
+### Access
+- Go to `/`
+- Log in with a regular user account
+
+Users are redirected to their **profile page**.
+
+### Your Garden
+Each user owns exactly one garden.
+
+From the profile page:
+- Click **“View this member’s garden”**
+
+Users may:
+- View garden information  
+- Edit the garden  
+- View all birds  
+- Add/delete their own birds  
+
+Users cannot view other users’ gardens.
+
+### Your Birds
+Inside your garden:
+- Click **“All birds”**
+
+Each bird:
+- Show  
+- Edit  
+- Delete  
+
+To add a bird:
+1. Open your garden  
+2. Go to **“All birds”**  
+3. Click **“Add a Bird”**
+
+The bird is linked to your garden.
+
+### Aviaries
+- On **/aviary** 
+
+Users can view:
+- All public aviaries
+- Their own private aviaries
+
+Users may:
+- Edit their aviaries  
+- Delete their aviaries  
+- Add birds to their own aviaries  
+
+They cannot access private aviaries belonging to others.
+
+---
+
+## 3. Permissions Summary
+
+| Feature | Admin | User |
+|--------|-------|------|
+| View all gardens | ✔ | ✖ (only their own) |
+| View all birds | ✔ | ✖ (only their own) |
+| Add birds | ✔ anywhere | ✔ own garden only |
+| View public aviaries | ✔ | ✔ |
+| View private aviaries | ✔ all | ✔ own only |
+| Edit/Delete aviaries | ✔ all | ✔ own only |
+| Access protected routes | ✔ full | ✖ limited |
+
 
 
 

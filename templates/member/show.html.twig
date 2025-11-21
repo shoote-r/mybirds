@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Member {{ member.email }}{% endblock %}
+
+{% block body %}
+
+    <h1>Member: {{ member.email }}</h1>
+    
+    {% if member.garden %}
+        <p>
+            <a href="{{ path('app_garden_show', {'id': member.garden.id}) }}">
+                View this member's garden
+            </a>
+        </p>
+    {% else %}
+        <p>No garden assigned to this member.</p>
+    {% endif %}
+    
+    <p>
+        <a href="{{ path('app_member_index') }}">Back to list</a>
+    </p>
+    <p>
+        <a href="{{ path('app_aviary_new', {'id': member.id}) }}">Create new aviary</a>
+	</p>
+    
+
+{% endblock %}

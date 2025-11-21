@@ -20,10 +20,24 @@ final class GardenController extends AbstractController
     #[Route(name: 'app_garden_index', methods: ['GET'])]
     public function index(GardenRepository $gardenRepository): Response
     {
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $gardens = $gardenRepository->findAll();
+        }
+        else {
+            $user = $this->getUser();
+            
+            if ($user) {
+                $gardens = [$user->getGarden()];
+            } else {
+                $gardens = []; // un anonyme ne doit rien voir
+            }
+        }
+        
         return $this->render('garden/index.html.twig', [
-            'gardens' => $gardenRepository->findAll(),
+            'gardens' => $gardens,
         ]);
     }
+    
 
    
 # Create Garden

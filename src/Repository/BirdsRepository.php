@@ -15,7 +15,20 @@ class BirdsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Birds::class);
     }
-
+    
+    /**
+     * @return Birds[] Returns an array of Birds belonging to the given Member
+     */
+    public function findMemberBirds(\App\Entity\Member $member): array
+    {
+        return $this->createQueryBuilder('b')
+        ->leftJoin('b.garden', 'g')
+        ->andWhere('g.member = :member')
+        ->setParameter('member', $member)
+        ->getQuery()
+        ->getResult();
+    }
+    
     //    /**
     //     * @return Birds[] Returns an array of Birds objects
     //     */
@@ -30,7 +43,7 @@ class BirdsRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
-
+    
     //    public function findOneBySomeField($value): ?Birds
     //    {
     //        return $this->createQueryBuilder('b')

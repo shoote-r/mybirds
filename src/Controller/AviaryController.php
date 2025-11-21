@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Entity\Aviary;
 use App\Form\AviaryType;
 use App\Repository\AviaryRepository;
@@ -19,30 +20,56 @@ final class AviaryController extends AbstractController
     #[Route(name: 'app_aviary_index', methods: ['GET'])]
     public function index(AviaryRepository $aviaryRepository): Response
     {
+        // ADMIN see all
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $aviaries = $aviaryRepository->findAll();
+        }
+        else {
+            $aviaries = $aviaryRepository->findBy(['published' => true]);
+            
+            $user = $this->getUser();
+            if ($user) {
+                $privateAviaries = $aviaryRepository->findBy([
+                    'published' => false,
+                    'member' => $user
+                ]);
+                
+                // fusion propre
+                $aviaries = array_merge($aviaries, $privateAviaries);
+            }
+        }
+        
         return $this->render('aviary/index.html.twig', [
-            'aviaries' => $aviaryRepository->findAll(),
+            'aviaries' => $aviaries,
         ]);
     }
+    
 
-    #[Route('/new', name: 'app_aviary_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{id}', name: 'app_aviary_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager, Member $member): Response
     {
         $aviary = new Aviary();
+        $aviary->setMember($member);  
+        
         $form = $this->createForm(AviaryType::class, $aviary);
         $form->handleRequest($request);
-
+        
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $entityManager->persist($aviary);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_aviary_index', [], Response::HTTP_SEE_OTHER);
+            
+            return $this->redirectToRoute('app_member_show', [
+                'id' => $member->getId(),
+            ], Response::HTTP_SEE_OTHER);
         }
-
+        
         return $this->render('aviary/new.html.twig', [
             'aviary' => $aviary,
             'form' => $form,
         ]);
     }
+    
 
     #[Route('/{id}', name: 'app_aviary_show', methods: ['GET'])]
     public function show(Aviary $aviary): Response
@@ -61,7 +88,9 @@ final class AviaryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_aviary_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_member_show', [
+                'id' => $aviary->getMember()->getId(),
+            ]);
         }
 
         return $this->render('aviary/edit.html.twig', [
@@ -78,7 +107,9 @@ final class AviaryController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_aviary_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_member_show', [
+            'id' => $aviary->getMember()->getId(),
+        ]);
     }
     
     # List all the birds inside an Aviary
