@@ -22,7 +22,7 @@ final class BirdsController extends AbstractController
     #[Route('/', name: 'app_birds_index', methods: ['GET'])]
     public function index(BirdsRepository $birdsRepository): Response
     {
-        // ADMIN → peut tout voir
+        // ADMIN see all
         if ($this->isGranted('ROLE_ADMIN')) {
             $birds = $birdsRepository->findAll();
         }
